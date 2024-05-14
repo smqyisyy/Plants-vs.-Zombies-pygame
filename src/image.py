@@ -50,3 +50,6 @@ class Image(pygame.sprite.Sprite):
     # 图片平移功能，向左平移
     def doLeft(self):
         self.pos[0] -= 2.5
+
+    def doRight(self):
+        self.pos[0] += 4

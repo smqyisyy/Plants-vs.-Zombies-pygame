@@ -2,7 +2,8 @@ import sys
 import pygame
 import image
 from const import *
-import objectbase
+import zombiebase
+import peabullet
 
 # pygame实例化
 pygame.init()
@@ -12,7 +13,9 @@ DS = pygame.display.set_mode(GAME_SIZE)
 # pygame加载背景图片
 img = image.Image(PATH_BACK, 0, (0, 0), GAME_SIZE, 0)
 # 加载僵尸图片
-zom = objectbase.ObjectBase("../pic/zombie/0/%d.png", 0, (1200, 200), (100, 128), 15)
+zom = zombiebase.ZombieBase(1, (1080, 200))
+# 加载子弹图片
+pb = peabullet.PeaBullet(0, (0, 200))
 while True:
     # 操作系统接收pygame中的一些事件
     for event in pygame.event.get():
@@ -27,5 +30,8 @@ while True:
     # 僵尸自己动
     zom.update()
     zom.draw(DS)
+    # 子弹自己打
+    pb.update()
+    pb.draw(DS)
     # 重新渲染
     pygame.display.update()

@@ -1,37 +1,51 @@
 # 对象基类，后续的各个角色都基础此类
 import image
 import time
+import data_object
 
 
 class ObjectBase(image.Image):
-    def __init__(self, pathFmt, pathIndex, pos, size=None, pathIndexCount=0):
-        super().__init__(pathFmt, pathIndex, pos, size, pathIndexCount)
+    def __init__(self, id, pos):
+        # 数据表中的id
+        self.id = id
         # 上次替换图片索引的时间
         self.preIndexTime = 0
         # 上次修改位置的时间
         self.prePosTime = 0
+        super().__init__(self.getData()["PATH"], 0, pos, self.getData()["SIZE"], self.getData()["IMAGE_INDEX_MAX"])
+
+    # 通过id拿数据
+    def getData(self):
+        return data_object.data[self.id]
+
+    # 用于子类实现来设置位置变动的频率避免掉帧
+    def getPositionCD(self):
+        return self.getData()["POSITION_CD"]
+
+    def getImageIndexCD(self):
+        return self.getData()["IMAGE_INDEX_CD"]
 
     # 利用update方法调用实现图片替换与位置移动
     def update(self):
         self.checkImageIndex()
         self.checkPosition()
 
-    # 实现图片替换帧动画
+    # 检查是否需要图片替换帧动画
     def checkImageIndex(self):
         # 防止图片替换过快
-        if time.time() - self.preIndexTime <= 0.2:
+        if time.time() - self.preIndexTime <= self.getImageIndexCD():
             return
         self.preIndexTime = time.time()
         # 自驱动替换图片
         idx = self.pathIndex + 1
-        idx = idx % self.pathIndexCount
+        idx = 0 if idx >= self.pathIndexCount else idx
         self.updateIndex(idx)
+        return True
 
-    # 实现图片自驱动移动
+    # 检查是否需要图片移动
     def checkPosition(self):
         # 防止移动过快
-        if time.time() - self.prePosTime <= 0.2:
+        if time.time() - self.prePosTime <= self.getPositionCD():
             return
         self.prePosTime = time.time()
-        # 向左移动
-        self.doLeft()
+        return True
