@@ -5,7 +5,8 @@ import os
 p_path = os.path.abspath("../pic/other/peabullet.png")
 # 僵尸图
 z_path = os.path.abspath("../pic/zombie/0/%d.png")
-
+# 阳光图
+s_path = os.path.abspath("../pic/other/sunlight/%d.png")
 data = {
     0: {
         "PATH": p_path,
@@ -22,5 +23,15 @@ data = {
         "IMAGE_INDEX_CD": 0.2,
         # 位置切换的时间间隔
         "POSITION_CD": 0.2, "SIZE": (100, 128)
+    },
+    2: {
+        "PATH": s_path,
+        # 图片有多少帧
+        "IMAGE_INDEX_MAX": 30,
+        # 切换图片索引的时间间隔
+        "IMAGE_INDEX_CD": 0.06,
+        # 位置切换的时间间隔
+        "POSITION_CD": 0.05,
+        "SIZE": (80, 80)
     }
 }
