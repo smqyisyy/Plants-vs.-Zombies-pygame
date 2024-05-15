@@ -12,6 +12,8 @@ class ObjectBase(image.Image):
         self.preIndexTime = 0
         # 上次修改位置的时间
         self.prePosTime = 0
+        # 上次召唤时间
+        self.preSummonTime = 0
         super().__init__(self.getData()["PATH"], 0, pos, self.getData()["SIZE"], self.getData()["IMAGE_INDEX_MAX"])
 
     # 通过id拿数据
@@ -25,10 +27,18 @@ class ObjectBase(image.Image):
     def getImageIndexCD(self):
         return self.getData()["IMAGE_INDEX_CD"]
 
+    def getSummonCD(self):
+        return self.getData()["SUMMON_CD"]
+
     # 利用update方法调用实现图片替换与位置移动
     def update(self):
         self.checkImageIndex()
         self.checkPosition()
+        self.checkSummon()
+
+    # 获取速度
+    def getSpeed(self):
+        return self.getData()["SPEED"]
 
     # 检查是否需要图片替换帧动画
     def checkImageIndex(self):
@@ -48,4 +58,19 @@ class ObjectBase(image.Image):
         if time.time() - self.prePosTime <= self.getPositionCD():
             return
         self.prePosTime = time.time()
+        speed = self.getSpeed()
+        self.pos = (self.pos[0] + speed[0], self.pos[1] + speed[1])
         return True
+
+    def checkSummon(self):
+        # 防止召唤过多
+        if time.time() - self.preSummonTime <= self.getSummonCD():
+            return
+        self.preSummonTime = time.time()
+        self.preSummon()
+
+        return True
+
+    # 子类实现召唤自己的召唤物
+    def preSummon(self):
+        pass

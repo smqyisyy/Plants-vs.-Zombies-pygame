@@ -5,7 +5,7 @@ from const import *
 import zombiebase
 import peabullet
 import sunlight
-
+import sunflower
 # pygame实例化
 pygame.init()
 # 创建一个1280x600的窗口
@@ -18,7 +18,9 @@ zom = zombiebase.ZombieBase(1, (1080, 200))
 # 加载子弹图片
 pb = peabullet.PeaBullet(0, (0, 200))
 # 加载阳光图片
-sl = sunlight.SunLight(2, (200, 0))
+# sl = sunlight.SunLight(2, (200, 0))
+# 加载向日葵
+sf = sunflower.SunFlower(3, LEFT_TOP)
 while True:
     # 操作系统接收pygame中的一些事件
     for event in pygame.event.get():
@@ -36,8 +38,8 @@ while True:
     # 子弹自己打
     pb.update()
     pb.draw(DS)
-    # 阳光自己落下
-    sl.update()
-    sl.draw(DS)
+    # 向日葵
+    sf.update()
+    sf.draw(DS)
     # 重新渲染
     pygame.display.update()
