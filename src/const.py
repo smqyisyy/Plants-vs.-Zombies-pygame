@@ -12,3 +12,5 @@ GRID_COUNT = (9, 5)
 GRID_SIZE = (76, 96)
 # 左上第一个网格的偏移位置
 LEFT_TOP = (200, 65)
+
+SUNFlOWER_ID = 3

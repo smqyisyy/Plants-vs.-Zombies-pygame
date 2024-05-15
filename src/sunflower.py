@@ -6,20 +6,19 @@ import sunlight
 class SunFlower(objectbase.ObjectBase):
     def __init__(self, id, pos):
         super().__init__(id, pos)
-        # 保存自己产生的阳光
-        self.sunLights = []
+        # 是否已经产生了阳光
+        self.hasSunLight = False
 
     #  召唤阳光
     def preSummon(self):
-        slight = sunlight.SunLight(2, (self.pos[0] + 20, self.pos[1] - 10))
-        self.sunLights.append(slight)
+        self.hasSunLight = True
 
-    def update(self):
-        super().update()
-        for sl in self.sunLights:
-            sl.update()
+    @property
+    def hasSummon(self):
+        return self.hasSunLight
 
-    def draw(self,ds):
-        super().draw(ds)
-        for sl in self.sunLights:
-            sl.draw(ds)
+    # 产生阳光
+    def doSummon(self):
+        if self.hasSummon:
+            self.hasSunLight = False
+            return sunlight.SunLight(2, (self.pos[0] + 20, self.pos[1] - 10))
