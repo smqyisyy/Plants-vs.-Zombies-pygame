@@ -10,6 +10,8 @@ z_path = os.path.abspath("../pic/zombie/0/%d.png")
 sl_path = os.path.abspath("../pic/other/sunlight/%d.png")
 # 向日葵图
 sf_path = os.path.abspath("../pic/plant/sunflower/%d.png")
+# 豌豆射手图
+ps_path = os.path.abspath("../pic/plant/peashooter/%d.png")
 data = {
     0: {
         "PATH": pb_path,
@@ -18,7 +20,10 @@ data = {
         "POSITION_CD": 0.008,
         "SIZE": (44, 44),
         "SPEED": (4, 0),
-        "SUMMON_CD": inf
+        "SUMMON_CD": inf,
+        "CAN_LOOT": False,
+        # 价格
+        "PRICE": 0
     },
     1: {
         "PATH": z_path,
@@ -30,7 +35,9 @@ data = {
         "POSITION_CD": 0.2, "SIZE": (100, 128),
         "SPEED": (-2.5, 0),
         # 召唤物的cd
-        "SUMMON_CD": inf
+        "SUMMON_CD": inf,
+        "CAN_LOOT": False,
+        "PRICE": 0
     },
     2: {
         "PATH": sl_path,
@@ -43,7 +50,10 @@ data = {
         "SIZE": (80, 80),
         "SPEED": (0, 2),
         # 召唤物的cd
-        "SUMMON_CD": inf
+        "SUMMON_CD": inf,
+        # 是否可以被捡起
+        "CAN_LOOT": True,
+        "PRICE": 25
     },
     3: {
         "PATH": sf_path,
@@ -56,6 +66,23 @@ data = {
         "SIZE": (128, 128),
         "SPEED": (0, 0),
         # 召唤物的cd
-        "SUMMON_CD": 8
+        "SUMMON_CD": 8,
+        "CAN_LOOT": False,
+        "PRICE": 50
+    },
+    4: {
+        "PATH": ps_path,
+        # 图片有多少帧
+        "IMAGE_INDEX_MAX": 15,
+        # 切换图片索引的时间间隔
+        "IMAGE_INDEX_CD": 0.15,
+        # 位置切换的时间间隔
+        "POSITION_CD": inf,
+        "SIZE": (128, 128),
+        "SPEED": (0, 0),
+        # 召唤物的cd
+        "SUMMON_CD": 3,
+        "CAN_LOOT": False,
+        "PRICE": 100
     }
 }

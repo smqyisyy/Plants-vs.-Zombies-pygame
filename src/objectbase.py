@@ -36,9 +36,17 @@ class ObjectBase(image.Image):
         self.checkPosition()
         self.checkSummon()
 
+    # 获取价格
+    def getPrice(self):
+        return self.getData()["PRICE"]
+
     # 获取速度
     def getSpeed(self):
         return self.getData()["SPEED"]
+
+    # 判断是否能够被捡起
+    def canLoot(self):
+        return self.getData()["CAN_LOOT"]
 
     # 检查是否需要图片替换帧动画
     def checkImageIndex(self):

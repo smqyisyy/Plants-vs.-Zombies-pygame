@@ -12,5 +12,7 @@ GRID_COUNT = (9, 5)
 GRID_SIZE = (76, 96)
 # 左上第一个网格的偏移位置
 LEFT_TOP = (200, 65)
-
+# 向日葵的id
 SUNFlOWER_ID = 3
+# 豌豆射手id
+PEASHOOTER_ID = 4

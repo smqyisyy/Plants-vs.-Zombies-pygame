@@ -27,13 +27,6 @@ while True:
             game.mouseClickHandler(event.button)
     # 游戏窗口变为全白
     DS.fill((255, 255, 255))
-
-    # 僵尸自己动
-    zom.update()
-    zom.draw(DS)
-    # 子弹自己打
-    pb.update()
-    pb.draw(DS)
     game.draw()
     game.update()
     # 重新渲染
