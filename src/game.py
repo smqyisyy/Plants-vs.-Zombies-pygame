@@ -1,4 +1,7 @@
 # 游戏主逻辑
+import random
+import time
+
 import pygame
 
 import image
@@ -7,6 +10,7 @@ from const import *
 import sunflower
 import data_object
 import peashooter
+import zombiebase
 
 
 class Game:
@@ -16,10 +20,14 @@ class Game:
         self.back = image.Image(PATH_BACK, 0, (0, 0), GAME_SIZE, 0)
         # 所有的植物
         self.plants = []
+        # 僵尸列表
+        self.zombies = []
         # 召唤物
         self.summons = []
         # 二维数组表示网格中是否有植物
         self.hasPlant = []
+        # 上次产生僵尸的时间
+        self.zombieGenerateTime = 0
         # 初始金币
         self.gold = 100
         # 文字字体
@@ -46,6 +54,8 @@ class Game:
             pl.draw(self.ds)
         for summon in self.summons:
             summon.draw(self.ds)
+        for zombie in self.zombies:
+            zombie.draw(self.ds)
         self.renderFont()
 
     def update(self):
@@ -57,6 +67,19 @@ class Game:
                 self.summons.append(summon)
         for summon in self.summons:
             summon.update()
+        for zombie in self.zombies:
+            zombie.update()
+        #  产生僵尸的时间到了就产生
+        if time.time() - self.zombieGenerateTime > ZOMBIE_BORN_CD:
+            self.zombieGenerateTime = time.time()
+            self.addZombie(ZOMBIE_BORN_X, random.randint(0, GRID_COUNT[1] - 1))
+
+    # 添加僵尸的方法
+    def addZombie(self, x, y):
+        # 生成一个僵尸
+        pos = LEFT_TOP[0] + x * GRID_SIZE[0], LEFT_TOP[1] + y * GRID_SIZE[1]
+        zombie = zombiebase.ZombieBase(1, pos)
+        self.zombies.append(zombie)
 
     # 添加向日葵的方法，x,y代表是哪个格子而不是坐标
     def addSunFlower(self, x, y):
@@ -120,5 +143,9 @@ class Game:
         if btn == 1:
             # 是否可以捡阳光
             self.checkLoot(mousePos)
+            # 是否要添加植物
+            self.checkAddPlant(mousePos, SUNFlOWER_ID)
+        # btn=3为右键,2是滚轮
+        elif btn == 3:
             # 是否要添加植物
             self.checkAddPlant(mousePos, PEASHOOTER_ID)

@@ -16,3 +16,7 @@ LEFT_TOP = (200, 65)
 SUNFlOWER_ID = 3
 # 豌豆射手id
 PEASHOOTER_ID = 4
+# 僵尸生成的CD
+ZOMBIE_BORN_CD = 10
+# 僵尸生成的x位置
+ZOMBIE_BORN_X = 14
