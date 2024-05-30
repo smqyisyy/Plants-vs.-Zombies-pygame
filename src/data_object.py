@@ -23,7 +23,11 @@ data = {
         "SUMMON_CD": inf,
         "CAN_LOOT": False,
         # 价格
-        "PRICE": 0
+        "PRICE": 0,
+        # 血量
+        "HP": 1,
+        # 攻击力
+        "ATT": 1
     },
     1: {
         "PATH": z_path,
@@ -37,7 +41,11 @@ data = {
         # 召唤物的cd
         "SUMMON_CD": inf,
         "CAN_LOOT": False,
-        "PRICE": 0
+        "PRICE": 0,
+        # 血量
+        "HP": 5,
+        # 攻击力
+        "ATT": 1
     },
     2: {
         "PATH": sl_path,
@@ -53,7 +61,9 @@ data = {
         "SUMMON_CD": inf,
         # 是否可以被捡起
         "CAN_LOOT": True,
-        "PRICE": 25
+        "PRICE": 25,
+        "HP": inf,
+        "ATT": 0
     },
     3: {
         "PATH": sf_path,
@@ -68,7 +78,11 @@ data = {
         # 召唤物的cd
         "SUMMON_CD": 8,
         "CAN_LOOT": False,
-        "PRICE": 50
+        "PRICE": 50,
+        # 血量
+        "HP": 5,
+        # 攻击力
+        "ATT": 0
     },
     4: {
         "PATH": ps_path,
@@ -83,6 +97,10 @@ data = {
         # 召唤物的cd
         "SUMMON_CD": 3,
         "CAN_LOOT": False,
-        "PRICE": 100
+        "PRICE": 100,
+        # 血量
+        "HP": 5,
+        # 攻击力
+        "ATT": 0
     }
 }

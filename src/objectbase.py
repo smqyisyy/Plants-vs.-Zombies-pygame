@@ -14,6 +14,10 @@ class ObjectBase(image.Image):
         self.prePosTime = 0
         # 上次召唤时间
         self.preSummonTime = 0
+        # 血量
+        self.hp = self.getData()["HP"]
+        # 攻击力
+        self.attack = self.getData()["ATT"]
         super().__init__(self.getData()["PATH"], 0, pos, self.getData()["SIZE"], self.getData()["IMAGE_INDEX_MAX"])
 
     # 通过id拿数据
@@ -29,6 +33,10 @@ class ObjectBase(image.Image):
 
     def getSummonCD(self):
         return self.getData()["SUMMON_CD"]
+
+    # 是否碰撞
+    def isCollide(self, other):
+        return self.getRect().colliderect(other.getRect())
 
     # 利用update方法调用实现图片替换与位置移动
     def update(self):

@@ -32,6 +32,10 @@ class Game:
         self.gold = 100
         # 文字字体
         self.goldFont = pygame.font.Font(None, 60)
+        # 击败僵尸数
+        self.zombie = 0
+        # 文字字体
+        self.zombieFont = pygame.font.Font(None, 60)
         for i in range(GRID_SIZE[0]):
             col = []
             for j in range(GRID_SIZE[1]):
@@ -47,6 +51,12 @@ class Game:
         # 渲染一个白色位置稍作偏移实现阴影效果
         textImg = self.goldFont.render("Gold:" + str(self.gold), True, (255, 255, 255))
         self.ds.blit(textImg, (10, 20))
+        textImg = self.zombieFont.render("Score:" + str(self.zombie), True, (0, 0, 0))
+        # 渲染位置在左上坐标13,23
+        self.ds.blit(textImg, (13, 83))
+        # 渲染一个白色位置稍作偏移实现阴影效果
+        textImg = self.zombieFont.render("Score:" + str(self.zombie), True, (255, 255, 255))
+        self.ds.blit(textImg, (10, 80))
 
     def draw(self):
         self.back.draw(self.ds)
@@ -73,6 +83,41 @@ class Game:
         if time.time() - self.zombieGenerateTime > ZOMBIE_BORN_CD:
             self.zombieGenerateTime = time.time()
             self.addZombie(ZOMBIE_BORN_X, random.randint(0, GRID_COUNT[1] - 1))
+        # 检查是否有僵尸死亡,将对应列表中的数据移除
+        self.checkSummonVSZombie()
+        # 检查是否有植物死亡，将对应植物列表中的数据移除
+        self.checkZombieVsPlant()
+        # 如果召唤物超出屏幕应该从内存中销毁
+        for summon in self.summons:
+            if summon.getRect().x > GAME_SIZE[0] or summon.getRect().y > GAME_SIZE[1]:
+                self.summons.remove(summon)
+                # break是因为防止remove元素后，后面元素会前移进而导致出现错误
+                break
+
+    # 子弹碰撞到僵尸的逻辑
+    def checkSummonVSZombie(self):
+        for summon in self.summons:
+            for zombie in self.zombies:
+                # 如果召唤物和僵尸发生碰撞进行攻击逻辑
+                if summon.isCollide(zombie):
+                    self.fight(summon, zombie)
+                    if zombie.hp <= 0:
+                        self.zombies.remove(zombie)
+                        # 击败僵尸计分
+                        self.zombie += 1
+                    if summon.hp <= 0:
+                        self.summons.remove(summon)
+                    return
+
+    # 僵尸吃植物
+    def checkZombieVsPlant(self):
+        for zombie in self.zombies:
+            for plant in self.plants:
+                if zombie.isCollide(plant):
+                    self.fight(zombie, plant)
+                    if plant.hp <= 0:
+                        self.plants.remove(plant)
+                        return
 
     # 添加僵尸的方法
     def addZombie(self, x, y):
@@ -99,7 +144,18 @@ class Game:
         y = (pos[1] - LEFT_TOP[1]) // GRID_SIZE[1]
         return x, y
 
-    #   检查能不能捡起来
+    # 攻击
+    def fight(self, a, b):
+        while True:
+            a.hp -= b.attack
+            b.hp -= a.attack
+            if b.hp <= 0:
+                return True
+            if a.hp <= 0:
+                return False
+        return False
+
+    # 检查能不能捡起来
     def checkLoot(self, mousePos):
         for summon in self.summons:
             # 如果不能捡起
