@@ -34,7 +34,7 @@ class ObjectBase(image.Image):
     def getSummonCD(self):
         return self.getData()["SUMMON_CD"]
 
-    # 是否碰撞
+    # 是否跟别的单位碰撞了碰撞
     def isCollide(self, other):
         return self.getRect().colliderect(other.getRect())
 

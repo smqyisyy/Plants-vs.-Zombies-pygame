@@ -11,6 +11,9 @@ import sunflower
 import data_object
 import peashooter
 import zombiebase
+import asyncclient
+import asyncio
+from share.const import *
 
 
 class Game:
@@ -18,6 +21,10 @@ class Game:
         self.ds = ds
         # 背景图
         self.back = image.Image(PATH_BACK, 0, (0, 0), GAME_SIZE, 0)
+        # 游戏结束图片
+        self.lose = image.Image(PATH_LOSE, 0, (0, 0), GAME_SIZE, 0)
+        # 游戏是否结束
+        self.isGameOver = False
         # 所有的植物
         self.plants = []
         # 僵尸列表
@@ -41,6 +48,8 @@ class Game:
             for j in range(GRID_SIZE[1]):
                 col.append(0)
             self.hasPlant.append(col)
+        # 生成客户端对象
+        self.client = asyncclient.AsyncClient(self, SERVER_IP, SERVER_PORT)
 
     # 渲染字体
     def renderFont(self):
@@ -67,6 +76,9 @@ class Game:
         for zombie in self.zombies:
             zombie.draw(self.ds)
         self.renderFont()
+        # 游戏结束时渲染失败画面
+        if self.isGameOver:
+            self.lose.draw(self.ds)
 
     def update(self):
         self.back.update(self.ds)
@@ -93,6 +105,11 @@ class Game:
                 self.summons.remove(summon)
                 # break是因为防止remove元素后，后面元素会前移进而导致出现错误
                 break
+        # 何时游戏判负
+        for zombie in self.zombies:
+            # 如果某僵尸x坐标小于等于200就判负了
+            if zombie.getRect().x < 200:
+                self.isGameOver = True
 
     # 子弹碰撞到僵尸的逻辑
     def checkSummonVSZombie(self):
@@ -153,7 +170,6 @@ class Game:
                 return True
             if a.hp <= 0:
                 return False
-        return False
 
     # 检查能不能捡起来
     def checkLoot(self, mousePos):
@@ -170,8 +186,8 @@ class Game:
                 return True
         return False
 
-    def checkAddPlant(self, mousePos, objId):
-        x, y = self.getIndexByPos(mousePos)
+    def checkAddPlant(self, pos, objId):
+        x, y = pos
         # 只能加在绿色网格中
         if x >= GRID_COUNT[0] or x < 0 or y > GRID_COUNT[1] or y < 0:
             return False
@@ -190,6 +206,9 @@ class Game:
 
     # 处理鼠标事件
     def mouseClickHandler(self, btn):
+        # 游戏结束时屏蔽鼠标操作
+        if self.isGameOver:
+            return
         # 获取鼠标位置
         mousePos = pygame.mouse.get_pos()
         # 捡了那就不能再种植了
@@ -197,11 +216,11 @@ class Game:
             return True
         # btn=1为左键按下
         if btn == 1:
-            # 是否可以捡阳光
-            self.checkLoot(mousePos)
             # 是否要添加植物
-            self.checkAddPlant(mousePos, SUNFlOWER_ID)
+            # self.checkAddPlant(mousePos, SUNFlOWER_ID)
+            # 发送0号类型消息表示要种一朵花
+            asyncio.run(self.client.c2s({'type': C2S_ADD_FLOWER, 'pos': self.getIndexByPos(mousePos)}))
         # btn=3为右键,2是滚轮
         elif btn == 3:
             # 是否要添加植物
-            self.checkAddPlant(mousePos, PEASHOOTER_ID)
+            self.checkAddPlant(self.getIndexByPos(mousePos), PEASHOOTER_ID)

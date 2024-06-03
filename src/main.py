@@ -3,6 +3,10 @@ import pygame
 from const import *
 import zombiebase
 import peabullet
+
+# 解决使用相对导入的报错
+top_path = "\\".join(os.path.abspath(__file__).split("\\")[:-2])
+sys.path.append(top_path)
 import game
 
 # pygame实例化
